@@ -1,0 +1,17 @@
+{
+  "files.associations": {
+    "*.sql": "sql"
+  },
+  "sqltools.connections": [
+    {
+      "name": "Local MySQL",
+      "driver": "MySQL",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "database": "your_database",
+      "username": "your_user",
+      "password": "your_password"
+    }
+  ]
+}
