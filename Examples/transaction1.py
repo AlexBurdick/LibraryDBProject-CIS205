@@ -49,6 +49,7 @@ def process_order(custID: int) -> int:
 	con = get_connection()									# get a connection object
 	cur = con.cursor()										# get a cursor object to execute queries	
 
+	# calls stored procedure create_order
 	args = (current_date, required_date, comments, custID)	# package arguments for stored procedure
 	cur.callproc('create_order', args)						# call the stored procedure to create the order
 	con.commit()											# commit the transaction
