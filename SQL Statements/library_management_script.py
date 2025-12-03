@@ -1,21 +1,9 @@
 '''
-	Command: mysql -u root -p < create_order_procedure1.sql
-	
-	This demonstrates recording a multi-step transaction to a MySQL database.
-	This transaction requires 3 tables to be updated. To maintain ACID compliance
-	we only commit changes when the entire transction is complete. If any stage 
-	fails, the entire transaction needs to fail.
-
-	https://www.essentialsql.com/sql-acid-database-properties-explained/
-
-	DB: 		Classic Models
-	Server: 	MySQL
-	Address: 	127.0.0.1
-	Port: 		3306
-
-	Various techniques are demonstrated. Connections are created and closed on an "as needed" basis
-	and not left to persist.
-	Also demonstrates passing MySQL Cursor objects as arguments to functions
+Command: mysql -u root -p < create_order_procedure1.sql
+DB: 		library_management
+Server: 	MySQL
+Address: 	127.0.0.1
+Port: 		3306
 '''
 import mysql.connector	# module to allow us to talk to MySQL
 import datetime			# module to get the current date and do date math
@@ -26,10 +14,10 @@ def get_connection() -> mysql.connector.connect:
 	'''
 	try:
 		c = mysql.connector.connect(
-				user	 = 'root',			# change this to work with other users
-				password = 'root',			# change password
-				database = 'classicmodels',	# database name
-				host  	 = 'localhost'		# address of MySQL student. Default port 3306
+				user	 = 'root',
+				password = 'root',
+				database = 'library_management',
+				host  	 = 'localhost'
 			)
 		print("Connection Successful")
 		return c
