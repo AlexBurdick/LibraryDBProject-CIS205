@@ -18,8 +18,8 @@ import mysql.connector
 # Returns a connection to the classicmodels database
 def get_connection() -> mysql.connector.connect:
     c = mysql.connector.connect(
-        user	 = 'root',
-        password = 'root',
+        user	 = 'test_user',
+        password = 'test_password123',
         database = 'library_management',
         host  	 = 'localhost'
     )
