@@ -1,11 +1,16 @@
 -- SQL DIALECT: MySQL
 -- Editor hint: this file contains MySQL-specific syntax (DELIMITER, IN/OUT parameters)
 -- Returns all books that are currently checked out
-SELECT b.title, r.first_name, r.last_name, due_date 
-FROM Checkout AS c
-JOIN Book AS b ON Book_idBook = idBook 
-JOIN Reader AS r ON Reader_idReader = idReader
-WHERE c.return_date IS NULL;
+DELIMITER //
+CREATE PROCEDURE GetCheckedOutBooks()
+BEGIN
+    SELECT b.title, r.first_name, r.last_name, due_date 
+    FROM Checkout AS c
+    JOIN Book AS b ON Book_idBook = idBook 
+    JOIN Reader AS r ON Reader_idReader = idReader
+    WHERE c.return_date IS NULL;
+END //
+DELIMITER ;
 
 -- Returns all books added in the last year
 SELECT
@@ -46,7 +51,7 @@ GROUP BY b.idBook, b.title, s.name;
 
 -- Return employees who added a book (and book information)
 DELIMITER $$
-CREATE PROCEDURE SelectBooksOfReadingLevel(
+CREATE PROCEDURE EmployeeBookAdded(
 IN p_employeeID INT
 )
 BEGIN
@@ -76,7 +81,7 @@ WHERE return_date IS NULL;
 
 -- Return what a reader has checked out
 DELIMITER $$
-CREATE PROCEDURE SelectBooksOfReadingLevel(
+CREATE PROCEDURE GetBooksOfReader(
 IN p_readerID INT
 )
 BEGIN
@@ -92,7 +97,7 @@ DELIMITER ;
 
 -- Return the sections an author has books in
 DELIMITER $$
-CREATE PROCEDURE SelectBooksOfReadingLevel(
+CREATE PROCEDURE GetSectionsOfAuthor(
 IN p_authorID INT
 )
 BEGIN
@@ -121,40 +126,80 @@ BEGIN
 END$$
 DELIMITER ;
 
-
--- Example procedure from Ken
-CREATE PROCEDURE `get_customer_order_history`(
-    IN customerID INT,
-    OUT total_orders INT,
-    OUT money_spent DECIMAL(10, 2)
+-- Add book to collection
+DELIMITER //
+CREATE PROCEDURE AddBook(
+    IN p_employeeID INT,
+    IN p_Reading_Level_idReading_Level INT,
+    IN p_Section_idSection INT,
+    IN p_title VARCHAR(200),
+    IN p_publication_date DATE,
+    IN p_introduce_date DATE,
+    IN p_language VARCHAR(50),
+    IN p_genre VARCHAR(50)
 )
 BEGIN
-    -- Get the order count
-    SELECT COUNT(orderNumber) 
-    INTO total_orders
-    FROM orders
-    WHERE customerNumber = customerID;
+    INSERT INTO Book (
+        employeeID, 
+        Reading_Level_idReading_Level, 
+        Section_idSection, 
+        title, 
+        publication_date, 
+        introduce_date, 
+        language, 
+        genre
+    )
+    VALUES (
+        p_employeeID,
+        p_Reading_Level_idReading_Level,
+        p_Section_idSection,
+        p_title,
+        p_publication_date,
+        p_introduce_date,
+        p_language,
+        p_genre
+    );
     
-    -- Calculate the total money spent
-    SELECT SUM(amount)
-    INTO money_spent
-    FROM payments
-    WHERE customerNumber = customerID;
+    -- Return success message and new ID
+    SELECT 
+        CONCAT('Book "', p_title, '" added successfully') AS message,
+        LAST_INSERT_ID() AS new_book_id;
+END //
+DELIMITER ;
+
+-- Add Author
+DELIMITER //
+CREATE PROCEDURE AddAuthor(
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_birth_date DATE,
+    IN p_death_date DATE
+)
+BEGIN
+    INSERT INTO Author (first_name, last_name, birth_date, death_date)
+    VALUES (p_first_name, p_last_name, p_birth_date, p_death_date);
     
-    -- Return a detailed order list
-    SELECT
-    o.orderNumber,
-        o.orderDate,
-        o.status,
-        SUM(od.quantityOrdered * od.priceEach) AS OrderTotal
-    FROM orders AS o
-    INNER JOIN orderdetails AS od
-    ON o.orderNumber = od.orderNumber
-    WHERE customerNumber = customerID
-    GROUP BY o.orderNumber
-    ORDER BY o.orderDate DESC;
-    
-END
+    SELECT 
+        CONCAT('Author "', p_first_name, ' ', p_last_name, '" added successfully') AS message,
+        LAST_INSERT_ID() AS new_author_id;
+END //
+DELIMITER ;
+
+-- Add book and author to intersection table
+DELIMITER //
+CREATE PROCEDURE AddBookHasAuthor(
+    IN p_Book_idBook INT,
+    IN p_Author_idAuthor INT
+)
+BEGIN
+    INSERT INTO book_has_author (Book_idBook, Author_idAuthor)
+    VALUES (p_Book_idBook, p_Author_idAuthor);
+
+    SELECT * FROM book_has_author
+    WHERE Book_idBook = p_Book_idBook AND Author_idAuthor = p_Author_idAuthor;
+END //
+DELIMITER ;
+
 
 -- Example of calling a procedure fom Python script
 call get_customer_order_history(112, @orders, @spent);
