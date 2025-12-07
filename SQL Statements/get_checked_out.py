@@ -33,7 +33,7 @@ def get_checked_out_books():
         cursor = connection.cursor(dictionary=True) # Create a cursor object as dictionary, from DeepSeek (12/04/2025)
         cursor.callproc('GetCheckedOutBooks')    # Call the stored procedure
         
-        for result in cursor.stored_results():      # Get results from the stored procedure call
+        for result in cursor.stored_results:      # Get results from the stored procedure call
             results = result.fetchall()
             
             if not results:                         # If there are no books checked out

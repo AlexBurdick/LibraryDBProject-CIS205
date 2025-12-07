@@ -163,7 +163,7 @@ BEGIN
     -- Return success message and new ID
     SELECT 
         CONCAT('Book "', p_title, '" added successfully') AS message,
-        LAST_INSERT_ID() AS new_book_id;
+        LAST_INSERT_ID() AS id;
 END //
 DELIMITER ;
 
@@ -181,7 +181,7 @@ BEGIN
     
     SELECT 
         CONCAT('Author "', p_first_name, ' ', p_last_name, '" added successfully') AS message,
-        LAST_INSERT_ID() AS new_author_id;
+        LAST_INSERT_ID() AS id;
 END //
 DELIMITER ;
 
