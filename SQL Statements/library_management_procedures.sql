@@ -204,3 +204,19 @@ DELIMITER ;
 -- Example of calling a procedure fom Python script
 call get_customer_order_history(112, @orders, @spent);
 SELECT @Orders, @spent;
+
+-- Testing statements
+SET @max_book_id = (SELECT MAX(idBook) FROM book);						-- Step 1: Find the max book and author IDs
+SET @max_author_id = (SELECT MAX(idAuthor) FROM author);
+DELETE FROM book_has_author												-- Step 2: Delete from intersection table
+WHERE Book_idBook = @max_book_id AND Author_idAuthor = @max_author_id;
+DELETE FROM author WHERE idAuthor = @max_author_id;						-- Step 3: Delete from author table
+DELETE FROM book WHERE idBook = @max_book_id;							-- Step 4: Delete from book tabl
+
+select * from book_has_author order by Book_idBook desc;
+select * from book order by idBook desc;
+select * from author order by idAuthor desc;
+
+CALL AddBook(1, 3, 6, 'The Great Gatsby', '1925-04-10', '2025-12-06', 'English', 'Classic');
+CALL AddAuthor('F. Scott', 'Fitzgerald', '1896-09-24', '1940-12-21');
+CALL AddBookHasAuthor(113, 92);
