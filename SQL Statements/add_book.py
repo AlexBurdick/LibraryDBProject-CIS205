@@ -75,6 +75,7 @@ def add_book(book, author):
 
         if book_id and author_id:
             book_author = [book_id, author_id]
+            connection.commit()
             cursor.callproc('AddBookHasAuthor', book_author)
             
             for result in cursor.stored_results():

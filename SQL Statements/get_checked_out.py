@@ -1,5 +1,4 @@
 '''
-Command: mysql -u root -p < create_order_procedure1.sql
 DB: 		library_management
 Server: 	MySQL
 Address: 	127.0.0.1
@@ -33,20 +32,20 @@ def get_checked_out_books():
         cursor = connection.cursor(dictionary=True) # Create a cursor object as dictionary, from DeepSeek (12/04/2025)
         cursor.callproc('GetCheckedOutBooks')    # Call the stored procedure
         
-        for result in cursor.stored_results:      # Get results from the stored procedure call
+        for result in cursor.stored_results():      # Get results from the stored procedure call
             results = result.fetchall()
             
             if not results:                         # If there are no books checked out
                 print("No books are currently checked out.")
             else:
-                print("Checked out books\n")        # Print header
+                print("Checked out books")        # Print header
                 print("="*80)
-                print(f"{'Title':<40} {'Reader':<25} {'Due date':<15}")
+                print(f"{'TITLE':<40} {'READER':<25} {'DUE DATE':<15}")
                 for row in results:
                     title = row['title']
                     borrower = f"{row['first_name']} {row['last_name']}"
                     due_date = row['due_date']
-                    print(f"{title:<40} {borrower:<25} {due_date:<15}")
+                    print(f"{title:<40} {borrower:<25} {due_date}")
                 
                 print(f"\nTotal books checked out: {len(results)}")
 
