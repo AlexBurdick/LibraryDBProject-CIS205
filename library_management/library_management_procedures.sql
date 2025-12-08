@@ -3,7 +3,6 @@
 
 -- Returns all books that are currently checked out
 DELIMITER //
-DROP PROCEDURE IF EXISTS GetCheckedOutBooks//
 CREATE PROCEDURE GetCheckedOutBooks()
 BEGIN
     SELECT b.title, r.first_name, r.last_name, due_date 
@@ -16,7 +15,6 @@ DELIMITER ;
 
 -- Add book to collection
 DELIMITER //
-DROP PROCEDURE IF EXISTS AddBook//
 CREATE PROCEDURE AddBook(
     IN p_employeeID INT,
     IN p_Reading_Level_idReading_Level INT,
@@ -58,7 +56,6 @@ DELIMITER ;
 
 -- Add Author
 DELIMITER //
-DROP PROCEDURE IF EXISTS AddAuthor//
 CREATE PROCEDURE AddAuthor(
     IN p_first_name VARCHAR(100),
     IN p_last_name VARCHAR(100),
@@ -77,7 +74,6 @@ DELIMITER ;
 
 -- Add book and author to intersection table
 DELIMITER //
-DROP PROCEDURE IF EXISTS AddBookHasAuthor//
 CREATE PROCEDURE AddBookHasAuthor(
     IN p_Book_idBook INT,
     IN p_Author_idAuthor INT
